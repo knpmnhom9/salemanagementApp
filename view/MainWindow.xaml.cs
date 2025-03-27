@@ -18,7 +18,7 @@ namespace salemanagementApp.view
             InitializeComponent();
 
             // Mặc định chọn nút Báo cáo & Thống kê
-            _currentSelectedButton = ;
+            _currentSelectedButton = btnReportsStatistics;
 
             // Hiển thị trang báo cáo mặc định
             MainFrame.Content = new ReportsPage();
