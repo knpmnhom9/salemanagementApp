@@ -4,8 +4,7 @@
        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        mc:Ignorable="d"
-       Title="Main window" Height="700" Width="1100" WindowStartupLocation="CenterScreen">
-
+       Title="Main window" WindowStartupLocation="CenterScreen" WindowState="Maximized">
    <Window.Resources>
        <!-- Style cho nút menu -->
        <Style x:Key="MainMenuButtonStyle" TargetType="Button">
@@ -53,37 +52,38 @@
                           VerticalAlignment="Center" HorizontalAlignment="Left"
                           Margin="20,0,0,0"/>
 
+             <!--  
                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
                    <Button Content="Thông báo" Style="{StaticResource MainMenuButtonStyle}" Background="Transparent" Foreground="White"/>
                    <Button Content="⚙️" Style="{StaticResource MainMenuButtonStyle}" Background="Transparent" Foreground="White"/>
                    <Button Content="Đăng xuất" Style="{StaticResource MainMenuButtonStyle}" Background="#e74c3c" Foreground="White"/>
-               </StackPanel>
+               </StackPanel> -->
            </Grid>
        </Border>
 
        <!-- Main Content -->
        <Grid Grid.Row="1">
            <Grid.ColumnDefinitions>
-               <ColumnDefinition Width="300"/>
+               <ColumnDefinition Width="250"/>
                <ColumnDefinition Width="*"/>
            </Grid.ColumnDefinitions>
 
            <!-- Sidebar -->
            <Border Grid.Column="0" Background="#ecf0f1">
-              <StackPanel>
-                  <TextBlock Text="🏠 MENU CHÍNH" Foreground="#2C3E50" FontSize="14" FontWeight="SemiBold" Margin="20,20,0,10"/>
-                  <Button x:Name="UserManagement" Content="👤 Quản lý người dùng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="ProductManagement" Content="📦 Quản lý sản phẩm" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="CartAndCheckout" Content="🛒 Giỏ hàng &amp; Thanh toán" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="OrderManagement" Content="🛍️ Quản lý đơn hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="WarehouseManagement" Content="🧺 Quản lý kho hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="ReportsAndStatistics" Content="📊 Báo cáo &amp; Thống kê" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="CustomerSupport" Content="📊 Đánh giá &amp; Hỗ trợ khách hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="PromotionManagement" Content="📊 Khuyến mãi &amp; Marketing" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <Button x:Name="SystemAndConfiguration" Content="⚙️ Hệ thống &amp; Cấu hình" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                  <!--more -->
-              </StackPanel>
-           </Border>
+                <StackPanel>
+                    <TextBlock Text="🏠 MENU CHÍNH" Foreground="#2C3E50" FontSize="14" FontWeight="SemiBold" Margin="20,20,0,10"/>
+                    <Button x:Name="UserManagement" Content="👥 Quản lý người dùng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="ProductManagement" Content="📦 Quản lý sản phẩm" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="CartAndCheckout" Content="🛍️ Giỏ hàng &amp; Thanh toán" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="OrderManagement" Content="📜 Quản lý đơn hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="WarehouseManagement" Content="🏬 Quản lý kho hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="ReportsAndStatistics" Content="📈 Báo cáo &amp; Thống kê" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="CustomerSupport" Content="💬 Đánh giá &amp; Hỗ trợ khách hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="PromotionManagement" Content="🎯 Khuyến mãi &amp; Marketing" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                    <Button x:Name="SystemAndConfiguration" Content="⚙️ Hệ thống &amp; Cấu hình" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
+                </StackPanel>
+
+            </Border>
 
            <!-- MainContent -->
            <Grid Grid.Column="1" Background="#ffffff">
