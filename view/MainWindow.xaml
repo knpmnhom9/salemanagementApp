@@ -5,91 +5,130 @@
        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        mc:Ignorable="d"
        Title="Main window" WindowStartupLocation="CenterScreen" WindowState="Maximized">
-   <Window.Resources>
-       <!-- Style cho nút menu -->
-       <Style x:Key="MainMenuButtonStyle" TargetType="Button">
-           <Setter Property="Height" Value="50"/>
-           <Setter Property="Margin" Value="10,5"/>
-           <Setter Property="Padding" Value="15,0"/>
-           <Setter Property="Background" Value="#ffffff"/>
-           <Setter Property="Foreground" Value="#2c3e50"/>
-           <Setter Property="BorderThickness" Value="0"/>
-           <Setter Property="HorizontalContentAlignment" Value="Left"/>
-           <Setter Property="Cursor" Value="Hand"/>
-           <Setter Property="FontSize" Value="16"/>
-           <Setter Property="FontWeight" Value="SemiBold"/>
-           <Setter Property="Template">
-               <Setter.Value>
-                   <ControlTemplate TargetType="Button">
-                       <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="10,5">
-                           <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                       </Border>
-                       <ControlTemplate.Triggers>
-                           <Trigger Property="IsMouseOver" Value="True">
-                               <Setter Property="Background" Value="#e3f2fd"/>
-                           </Trigger>
-                           <Trigger Property="IsPressed" Value="True">
-                               <Setter Property="Background" Value="#bbdefb"/>
-                           </Trigger>
-                       </ControlTemplate.Triggers>
-                   </ControlTemplate>
-               </Setter.Value>
-           </Setter>
-       </Style>
-   </Window.Resources>
+    <!--Width="375" Height="672"-->
+    <Window.Resources>
+        <!-- Style cho nút menu khi thu gọn -->
+        <Style x:Key="CollapsedMenuButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#2c3e50"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#e3f2fd"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#bbdefb"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-   <Grid>
-       <Grid.RowDefinitions>
-           <RowDefinition Height="60"/>
-           <RowDefinition Height="*"/>
-       </Grid.RowDefinitions>
+        <!-- Style cho nút menu khi mở rộng -->
+        <Style x:Key="ExpandedMenuButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="Background" Value="#ffffff"/>
+            <Setter Property="Foreground" Value="#2c3e50"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="10,5">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#e3f2fd"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#bbdefb"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-       <!-- Header -->
-       <Border Grid.Row="0" Background="#2c3e50">
-           <Grid>
-               <TextBlock Text="HỆ THỐNG QUẢN LÝ BÁN HÀNG" 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2c3e50">
+            <Grid>
+                <TextBlock Text="HỆ THỐNG QUẢN LÝ BÁN HÀNG" 
                           Foreground="White" FontSize="22" FontWeight="Bold" 
                           VerticalAlignment="Center" HorizontalAlignment="Left"
                           Margin="20,0,0,0"/>
+            </Grid>
+        </Border>
 
-             <!--  
-               <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,0">
-                   <Button Content="Thông báo" Style="{StaticResource MainMenuButtonStyle}" Background="Transparent" Foreground="White"/>
-                   <Button Content="⚙️" Style="{StaticResource MainMenuButtonStyle}" Background="Transparent" Foreground="White"/>
-                   <Button Content="Đăng xuất" Style="{StaticResource MainMenuButtonStyle}" Background="#e74c3c" Foreground="White"/>
-               </StackPanel> -->
-           </Grid>
-       </Border>
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SidebarColumn" Width="60"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-       <!-- Main Content -->
-       <Grid Grid.Row="1">
-           <Grid.ColumnDefinitions>
-               <ColumnDefinition Width="250"/>
-               <ColumnDefinition Width="*"/>
-           </Grid.ColumnDefinitions>
+            <!-- Sidebar -->
+            <Border x:Name="Sidebar" Grid.Column="0" Background="#ecf0f1" MouseEnter="Sidebar_MouseEnter" MouseLeave="Sidebar_MouseLeave">
+                <Grid>
+                    <StackPanel x:Name="CollapsedMenu" Visibility="Visible">
+                        <TextBlock Text="🏠" Foreground="#2C3E50" FontSize="20" FontWeight="SemiBold" Margin="0,20,0,10" HorizontalAlignment="Center"/>
+                        <Button x:Name="UserManagementIcon" Content="👥" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="UserManagement"/>
+                        <Button x:Name="ProductManagementIcon" Content="📦" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="ProductManagement"/>
+                        <Button x:Name="CartAndCheckoutIcon" Content="🛍️" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="CartAndCheckout"/>
+                        <Button x:Name="OrderManagementIcon" Content="📜" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="OrderManagement"/>
+                        <Button x:Name="WarehouseManagementIcon" Content="🏬" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="WarehouseManagement"/>
+                        <Button x:Name="ReportsAndStatisticsIcon" Content="📈" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="ReportsAndStatistics"/>
+                        <Button x:Name="CustomerSupportIcon" Content="💬" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="CustomerSupport"/>
+                        <Button x:Name="PromotionManagementIcon" Content="🎯" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="PromotionManagement"/>
+                        <Button x:Name="SystemAndConfigurationIcon" Content="⚙️" Style="{StaticResource CollapsedMenuButtonStyle}" Click="NavigateToModule" Tag="SystemAndConfiguration"/>
+                    </StackPanel>
 
-           <!-- Sidebar -->
-           <Border Grid.Column="0" Background="#ecf0f1">
-                <StackPanel>
-                    <TextBlock Text="🏠 MENU CHÍNH" Foreground="#2C3E50" FontSize="14" FontWeight="SemiBold" Margin="20,20,0,10"/>
-                    <Button x:Name="UserManagement" Content="👥 Quản lý người dùng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="ProductManagement" Content="📦 Quản lý sản phẩm" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="CartAndCheckout" Content="🛍️ Giỏ hàng &amp; Thanh toán" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="OrderManagement" Content="📜 Quản lý đơn hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="WarehouseManagement" Content="🏬 Quản lý kho hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="ReportsAndStatistics" Content="📈 Báo cáo &amp; Thống kê" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="CustomerSupport" Content="💬 Đánh giá &amp; Hỗ trợ khách hàng" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="PromotionManagement" Content="🎯 Khuyến mãi &amp; Marketing" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                    <Button x:Name="SystemAndConfiguration" Content="⚙️ Hệ thống &amp; Cấu hình" Style="{StaticResource MainMenuButtonStyle}" Click="NavigateToModule"/>
-                </StackPanel>
-
+                    <StackPanel x:Name="ExpandedMenu" Visibility="Collapsed">
+                        <TextBlock Text="🏠 MENU CHÍNH" Foreground="#2C3E50" FontSize="14" FontWeight="SemiBold" Margin="20,20,0,10"/>
+                        <Button x:Name="UserManagement" Content="👥 Quản lý người dùng" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="ProductManagement" Content="📦 Quản lý sản phẩm" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="CartAndCheckout" Content="🛍️ Giỏ hàng &amp; Thanh toán" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="OrderManagement" Content="📜 Quản lý đơn hàng" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="WarehouseManagement" Content="🏬 Quản lý kho hàng" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="ReportsAndStatistics" Content="📈 Báo cáo &amp; Thống kê" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="CustomerSupport" Content="💬 Đánh giá &amp; Hỗ trợ khách hàng" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="PromotionManagement" Content="🎯 Khuyến mãi &amp; Marketing" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                        <Button x:Name="SystemAndConfiguration" Content="⚙️ Hệ thống &amp; Cấu hình" Style="{StaticResource ExpandedMenuButtonStyle}" Click="NavigateToModule"/>
+                    </StackPanel>
+                </Grid>
             </Border>
 
-           <!-- MainContent -->
-           <Grid Grid.Column="1" Background="#ffffff">
-               <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="10"/>
-               <TextBlock x:Name="txtContentTitle" Text="Home page" FontSize="20" FontWeight="Bold" Margin="10"/>
-           </Grid>
-       </Grid>
-   </Grid>
+            <!-- MainContent -->
+            <Grid Grid.Column="1" Background="#ffffff">
+                <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Margin="10"/>
+                <TextBlock x:Name="txtContentTitle" Text="Home page" FontSize="20" FontWeight="Bold" Margin="10"/>
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>
