@@ -1,4 +1,5 @@
-﻿using System;
+﻿using salemanagementApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,54 +16,50 @@ using System.Windows.Shapes;
 
 namespace salemanagementApp.view
 {
-    public partial class RegisterUserWindow : Window
+    public partial class RegisterUserPage : Page
     {
-        public RegisterUserWindow()
+        private List<UserModel> _allUsers;
+
+        public RegisterUserPage(List<UserModel> allUsers)
         {
             InitializeComponent();
+            _allUsers = allUsers;  // Nhận danh sách người dùng từ trang cha
         }
 
-        private void BtnRegister_Click(object sender, RoutedEventArgs e)
+        private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-            // Kiểm tra dữ liệu nhập
-            if (string.IsNullOrEmpty(txtFullName.Text) ||
-                string.IsNullOrEmpty(txtUsername.Text) ||
-                string.IsNullOrEmpty(txtEmail.Text) ||
-                string.IsNullOrEmpty(txtPhone.Text) ||
-                txtPassword.Password.Length == 0 ||
-                txtConfirmPassword.Password.Length == 0)
+            // Lấy thông tin từ các điều khiển
+            string fullName = txtFullName.Text;
+            string username = txtUsername.Text;
+            string email = txtEmail.Text;
+            string phone = txtPhone.Text;
+            string role = (cboRole.SelectedItem as ComboBoxItem)?.Content.ToString();
+            string status = (cboStatus.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            // Kiểm tra thông tin
+            if (string.IsNullOrWhiteSpace(fullName) || string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email))
             {
                 MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Kiểm tra mật khẩu khớp nhau
-            if (txtPassword.Password != txtConfirmPassword.Password)
+            // Thêm người dùng mới vào danh sách
+            var newUser = new UserModel
             {
-                MessageBox.Show("Mật khẩu xác nhận không khớp!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                Id = (_allUsers.Count + 1).ToString(), // Tạo ID giả (chỉ mang tính minh họa)
+                FullName = fullName,
+                Username = username,
+                Email = email,
+                Phone = phone,
+                Role = role,
+                Status = status
+            };
 
-            // Kiểm tra đồng ý điều khoản
-            if (!chkAgree.IsChecked.HasValue || !chkAgree.IsChecked.Value)
-            {
-                MessageBox.Show("Vui lòng đồng ý với điều khoản và điều kiện!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+            _allUsers.Add(newUser);
+            MessageBox.Show("Đăng ký người dùng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            // Thực hiện đăng ký
-            MessageBox.Show("Đăng ký tài khoản thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            // Đóng form sau khi đăng ký thành công
-            this.Close();
-        }
-
-        private void TxtLogin_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            // Mở form đăng nhập và đóng form đăng ký
-            // LoginWindow loginWindow = new LoginWindow();
-            // loginWindow.Show();
-            this.Close();
+            // Đóng cửa sổ này và trở lại trang người dùng (hoặc chuyển về trang cha)
+            this.NavigationService.GoBack();
         }
     }
 }

@@ -6,11 +6,13 @@
       mc:Ignorable="d">
 
     <Page.Resources>
+        <!-- Function button style -->
         <Style x:Key="FunctionButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Width" Value="180"/>
             <Setter Property="Margin" Value="10,5"/>
-            <Setter Property="Background" Value="#3498db"/>
+            <Setter Property="Background" Value="#4CAF50"/>
+            <!-- New color -->
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -25,10 +27,12 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#2980b9"/>
+                                <Setter Property="Background" Value="#388E3C"/>
+                                <!-- Darker on hover -->
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" Value="#1f6aa5"/>
+                                <Setter Property="Background" Value="#2C6F33"/>
+                                <!-- Darker when pressed -->
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -36,12 +40,15 @@
             </Setter>
         </Style>
 
+        <!-- Search TextBox style -->
         <Style x:Key="SearchTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="35"/>
             <Setter Property="Padding" Value="10,5"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#bdc3c7"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#F4F4F4"/>
+            <!-- Lighter background -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -56,6 +63,7 @@
             </Setter>
         </Style>
 
+        <!-- DataGrid style -->
         <Style x:Key="UserDataGridStyle" TargetType="DataGrid">
             <Setter Property="AutoGenerateColumns" Value="False"/>
             <Setter Property="CanUserAddRows" Value="False"/>
@@ -66,13 +74,13 @@
             <Setter Property="IsReadOnly" Value="True"/>
             <Setter Property="SelectionMode" Value="Single"/>
             <Setter Property="SelectionUnit" Value="FullRow"/>
-            <Setter Property="BorderBrush" Value="#bdc3c7"/>
+            <Setter Property="BorderBrush" Value="#BDC3C7"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="RowHeaderWidth" Value="0"/>
             <Setter Property="Background" Value="White"/>
-            <Setter Property="AlternatingRowBackground" Value="#f5f5f5"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#ecf0f1"/>
-            <Setter Property="VerticalGridLinesBrush" Value="#ecf0f1"/>
+            <Setter Property="AlternatingRowBackground" Value="#ECF0F1"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#ECF0F1"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#ECF0F1"/>
         </Style>
     </Page.Resources>
 
@@ -84,6 +92,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <!-- Header and Search Section -->
         <Grid Grid.Row="1" Margin="20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -110,6 +119,7 @@
             </StackPanel>
         </Grid>
 
+        <!-- DataGrid -->
         <DataGrid Grid.Row="2" Margin="20,10,31,10" Name="dgUsers" 
                   Style="{StaticResource UserDataGridStyle}">
             <DataGrid.Columns>
@@ -125,13 +135,13 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="✏️ Sửa" Margin="5,0" Padding="10,5"
-                                        Background="#f39c12" Foreground="White" BorderThickness="0"
+                                        Background="#F39C12" Foreground="White" BorderThickness="0"
                                         Click="btnEdit_Click"/>
                                 <Button Content="🔒 Phân quyền" Margin="5,0" Padding="10,5"
-                                        Background="#27ae60" Foreground="White" BorderThickness="0"
+                                        Background="#27AE60" Foreground="White" BorderThickness="0"
                                         Click="btnPermission_Click"/>
                                 <Button Content="❌ Xóa" Margin="5,0" Padding="10,5"
-                                        Background="#e74c3c" Foreground="White" BorderThickness="0"
+                                        Background="#E74C3C" Foreground="White" BorderThickness="0"
                                         Click="btnDelete_Click"/>
                             </StackPanel>
                         </DataTemplate>
@@ -140,6 +150,7 @@
             </DataGrid.Columns>
         </DataGrid>
 
+        <!-- Footer Section -->
         <Grid Grid.Row="3" Margin="20,10,20,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -152,11 +163,17 @@
                 <TextBlock Text=" người dùng" VerticalAlignment="Center"/>
             </StackPanel>
 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="230,10,0,10" Width="588">
+                <Button Content="←" Width="60" Height="35" Click="btnPreviousPage_Click"/>
+                <TextBlock x:Name="txtCurrentPage" Text="Trang 1" Margin="10" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <Button Content="→" Width="60" Height="35" Click="btnNextPage_Click"/>
+            </StackPanel>
+
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="📧 Gửi email thông báo" Style="{StaticResource FunctionButtonStyle}" 
                         Name="btnSendEmail" Click="btnSendEmail_Click" Margin="10,5"/>
                 <Button Content="📊 Xuất báo cáo" Style="{StaticResource FunctionButtonStyle}" 
-                        Name="btnExportReport" Background="#16a085" Click="btnExportReport_Click" Margin="10,5"/>
+                        Name="btnExportReport" Background="#16A085" Click="btnExportReport_Click" Margin="10,5"/>
             </StackPanel>
         </Grid>
     </Grid>
