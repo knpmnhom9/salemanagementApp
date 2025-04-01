@@ -13,7 +13,7 @@ namespace salemanagementApp.view
         }
 
         // Khi di chuột vào ExpandedMenu, không cần xử lý gì thêm vì menu luôn hiển thị
-        private void ExpandedMenu_MouseEnter(object sender, MouseEventArgs e)
+        private void ExpandedMenu_MouseEnter(object sender, MouseEventArgs e) 
         {
             // Không cần làm gì, menu đã luôn hiển thị
         }
