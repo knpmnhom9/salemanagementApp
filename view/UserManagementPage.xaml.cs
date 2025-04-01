@@ -69,18 +69,26 @@ namespace salemanagementApp.view
                 (u.FullName.ToLower().Contains(searchText) || u.Username.ToLower().Contains(searchText)) &&
                 (selectedRole == "Tất cả người dùng" || u.Role == selectedRole)).ToList();
 
-            // Hiển thị danh sách đã lọc
-            dgUsers.ItemsSource = filteredUsers;
+            // Cập nhật lại số trang nếu trang hiện tại vượt quá số trang có sẵn
+            int totalPages = (int)Math.Ceiling((double)filteredUsers.Count / _itemsPerPage);
+            if (_currentPage > totalPages)
+            {
+                _currentPage = totalPages; // Đảm bảo không vượt quá số trang có sẵn
+            }
 
-            // Cập nhật số lượng người dùng tìm thấy
+            // Hiển thị danh sách đã lọc với phân trang
+            dgUsers.ItemsSource = filteredUsers.Skip((_currentPage - 1) * _itemsPerPage).Take(_itemsPerPage).ToList();
+
+            // Cập nhật số lượng người dùng tìm thấy và trang hiện tại
             txtTotalUsers.Text = $"{filteredUsers.Count} người dùng";
+            txtCurrentPage.Text = $"Trang {_currentPage} / {totalPages}";
         }
 
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
-            RegisterUserPage registerUserPage = new RegisterUserPage(_allUsers);
-            this.NavigationService.Navigate(registerUserPage);
+            AddUserPage addUserPage = new AddUserPage(_allUsers);
+            this.NavigationService.Navigate(addUserPage);
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
