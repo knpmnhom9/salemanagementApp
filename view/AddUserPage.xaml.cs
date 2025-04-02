@@ -41,6 +41,7 @@ namespace salemanagementApp.view
             }
 
             // Tạo đối tượng UserModel mới
+            var selectedRole = cboRole.SelectedItem as ComboBoxItem;
             var newUser = new UserModel
             {
                 Id = (_allUsers.Count + 1).ToString(),
@@ -48,7 +49,7 @@ namespace salemanagementApp.view
                 Username = txtUsername.Text,
                 Email = txtEmail.Text,
                 Phone = txtPhone.Text,
-                Role = (cboRole.SelectedItem as ComboBoxItem).Content.ToString(),
+                Role = selectedRole?.Content?.ToString() ?? string.Empty,
                 Status = "Hoạt động" // Mặc định là "Hoạt động"
             };
 
