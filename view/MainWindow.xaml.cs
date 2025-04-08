@@ -1,7 +1,7 @@
-﻿using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Configuration;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace salemanagementApp.view
 {
@@ -14,36 +14,57 @@ namespace salemanagementApp.view
             InitializeComponent();
         }
 
-        // Khi di chuột vào ExpandedMenu, không cần xử lý gì thêm vì menu luôn hiển thị
-        private void ExpandedMenu_MouseEnter(object sender, MouseEventArgs e)
-        {
-            // Không cần làm gì, menu đã luôn hiển thị
-        }
-
         private void NavigateToModule(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is not null)
+            if (sender is Button clickedButton && clickedButton.Tag != null)
             {
-                // Bỏ highlight nút cũ (nếu có)
-                if (currentSelectedButton != null)
+                // Bỏ chọn các nút cũ
+                foreach (var child in SidebarMenu.Children)
                 {
-                    currentSelectedButton.Background = Brushes.Transparent;
+                    if (child is Button btn)
+                    {
+                        btn.Background = (Brush)this.FindResource("MenuDefaultBackground");
+                        btn.Foreground = Brushes.White;
+                    }
                 }
 
-                // Cập nhật nút hiện tại và đổi màu highlight
-                currentSelectedButton = button;
-                currentSelectedButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1ABC9C"));
+                // Highlight nút đang chọn
+                clickedButton.Background = (Brush)this.FindResource("MenuSelectedBackground");
+                clickedButton.Foreground = Brushes.White;
+                currentSelectedButton = clickedButton;
 
-                string pageTag = button.Tag.ToString();
+                // Điều hướng trang
+                string pageTag = clickedButton.Tag.ToString();
 
                 switch (pageTag)
                 {
                     case "UserManagementPage":
                         MainFrame.Navigate(new UserManagementPage());
                         break;
-                    case "ProductManagementPage":
-                        MessageBox.Show("Chức năng đang phát triển", "Thông báo");
-                        break;
+                    //case "ProductManagementPage":
+                    //    MainFrame.Navigate(new ProductManagementPage());
+                    //    break;
+                    //case "CartAndCheckoutPage":
+                    //    MainFrame.Navigate(new CartAndCheckoutPage());
+                    //    break;
+                    //case "OrderManagementPage":
+                    //    MainFrame.Navigate(new OrderManagementPage());
+                    //    break;
+                    //case "WarehouseManagementPage":
+                    //    MainFrame.Navigate(new WarehouseManagementPage());
+                    //    break;
+                    //case "ReportPage":
+                    //    MainFrame.Navigate(new ReportPage());
+                    //    break;
+                    //case "CustomerSupportPage":
+                    //    MainFrame.Navigate(new CustomerSupportPage());
+                    //    break;
+                    //case "PromotionAndMarketingPage":
+                    //    MainFrame.Navigate(new PromotionAndMarketingPage());
+                    //    break;
+                    //case "SettingsPage":
+                    //    MainFrame.Navigate(new SettingsPage());
+                    //    break;
                     default:
                         MessageBox.Show("Chức năng này chưa có", "Thông báo");
                         break;

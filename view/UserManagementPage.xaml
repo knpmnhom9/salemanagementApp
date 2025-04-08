@@ -105,9 +105,9 @@
                 <ComboBox Width="145" Height="38" Margin="0,0,10,0" Name="cboFilter"
                           VerticalContentAlignment="Center" Padding="10,5">
                     <ComboBoxItem Content="Tất cả người dùng" IsSelected="True"/>
-                    <ComboBoxItem Content="Quản trị viên"/>
-                    <ComboBoxItem Content="Nhân viên"/>
-                    <ComboBoxItem Content="Khách hàng"/>
+                    <ComboBoxItem Content="Admin"/>
+                    <ComboBoxItem Content="User"/>
+                    <ComboBoxItem Content="Manager"/>
                 </ComboBox>
                 <Button Content="🔍 Tìm kiếm" Style="{StaticResource FunctionButtonStyle}" 
                         Width="117" x:Name="btnSearch" Click="btnSearch_Click"/>

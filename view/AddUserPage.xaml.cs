@@ -18,9 +18,9 @@ namespace salemanagementApp.view
 {
     public partial class AddUserPage : Page
     {
-        private List<UserModel> _allUsers;
+        private List<User> _allUsers;
 
-        public AddUserPage(List<UserModel> allUsers)
+        public AddUserPage(List<User> allUsers)
         {
             InitializeComponent();
             _allUsers = allUsers;
@@ -42,9 +42,9 @@ namespace salemanagementApp.view
 
             // Tạo đối tượng UserModel mới
             var selectedRole = cboRole.SelectedItem as ComboBoxItem;
-            var newUser = new UserModel
+            var newUser = new User
             {
-                Id = (_allUsers.Count + 1).ToString(),
+               
                 FullName = txtFullName.Text,
                 Username = txtUsername.Text,
                 Email = txtEmail.Text,

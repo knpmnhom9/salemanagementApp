@@ -18,9 +18,9 @@ namespace salemanagementApp.view
 {
     public partial class RegisterUserPage : Page
     {
-        private List<UserModel> _allUsers;
+        private List<User> _allUsers;
 
-        public RegisterUserPage(List<UserModel> allUsers)
+        public RegisterUserPage(List<User> allUsers)
         {
             InitializeComponent();
             _allUsers = allUsers;  // Nhận danh sách người dùng từ trang cha
@@ -44,9 +44,9 @@ namespace salemanagementApp.view
             }
 
             // Thêm người dùng mới vào danh sách
-            var newUser = new UserModel
+            var newUser = new User
             {
-                Id = (_allUsers.Count + 1).ToString(), // Tạo ID giả (chỉ mang tính minh họa)
+               // Id = (_allUsers.Count + 1).ToString(), // Tạo ID giả (chỉ mang tính minh họa)
                 FullName = fullName,
                 Username = username,
                 Email = email,

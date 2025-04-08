@@ -4,45 +4,65 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using salemanagementApp.Models;
-using salemanagementApp.Data;
 using System.IO;
-
+using salemanagementApp.Data;
+using Microsoft.EntityFrameworkCore;
 namespace salemanagementApp.view
 {
     public partial class UserManagementPage : Page
     {
         private int _currentPage = 1;
-        private int _itemsPerPage = 4;
-        private List<UserModel> _allUsers = new List<UserModel>();
+        private int _itemsPerPage = 7;
+        private List<User> _allUsers = new List<User>();
 
         public UserManagementPage()
         {
             InitializeComponent();
             LoadDataFromDatabase();
         }
+        private AppDbContext GetContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=SaleManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            // đổi nếu cần thiết
+            return new AppDbContext(optionsBuilder.Options);
+        }
 
         private void LoadDataFromDatabase()
         {
-            using (var context = new AppDbContext())
+            using (var context = GetContext())
             {
+                
                 _allUsers = context.Users.ToList();
             }
             LoadPageData();
         }
 
+
+
         private void LoadPageData()
         {
-            using (var db = new AppDbContext())
-            {
-                _allUsers = db.Users.ToList();
-            }
+            var pagedUsers = _allUsers
+                .Skip((_currentPage - 1) * _itemsPerPage)
+                .Take(_itemsPerPage)
+                .Select((user, index) => new
+                {
+                    STT = (_currentPage - 1) * _itemsPerPage + index + 1,
+                    user.Id,
+                    user.FullName,
+                    user.Username,
+                    user.Email,
+                    user.Phone,
+                    user.Role,
+                    user.Status
+                }).ToList();
 
-            var pagedUsers = _allUsers.Skip((_currentPage - 1) * _itemsPerPage).Take(_itemsPerPage).ToList();
             dgUsers.ItemsSource = pagedUsers;
 
             txtTotalUsers.Text = $"{_allUsers.Count} người dùng";
             txtCurrentPage.Text = $"Trang {_currentPage} / {Math.Ceiling((double)_allUsers.Count / _itemsPerPage)}";
         }
+
 
         private void btnNextPage_Click(object sender, RoutedEventArgs e)
         {
@@ -64,18 +84,34 @@ namespace salemanagementApp.view
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)
         {
-            string searchText = txtSearch.Text.ToLower();
+            string searchText = txtSearch.Text.Trim().ToLower();
             string selectedRole = (cboFilter.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Tất cả người dùng";
 
-            var filteredUsers = _allUsers.Where(u => (u.FullName.ToLower().Contains(searchText) || u.Username.ToLower().Contains(searchText)) && (selectedRole == "Tất cả người dùng" || u.Role == selectedRole)).ToList();
+            // Lọc danh sách theo từ khóa và role
+            var filteredUsers = _allUsers
+                .Where(u =>
+                    (string.IsNullOrEmpty(searchText) ||
+                     u.FullName.ToLower().Contains(searchText) ||
+                     u.Username.ToLower().Contains(searchText)) &&
+                    (selectedRole == "Tất cả người dùng" || u.Role == selectedRole))
+                .OrderBy(u => u.Id)
+                .ToList();
 
+            // Tính lại tổng số trang và cập nhật trang hiện tại
             int totalPages = (int)Math.Ceiling((double)filteredUsers.Count / _itemsPerPage);
             if (_currentPage > totalPages) _currentPage = totalPages;
+            if (_currentPage <= 0) _currentPage = 1;
 
-            dgUsers.ItemsSource = filteredUsers.Skip((_currentPage - 1) * _itemsPerPage).Take(_itemsPerPage).ToList();
+            // Gán dữ liệu vào datagrid
+            dgUsers.ItemsSource = filteredUsers
+                .Skip((_currentPage - 1) * _itemsPerPage)
+                .Take(_itemsPerPage)
+                .ToList();
+
             txtTotalUsers.Text = $"{filteredUsers.Count} người dùng";
-            txtCurrentPage.Text = $"Trang {_currentPage} / {totalPages}";
+            txtCurrentPage.Text = $"Trang {_currentPage} / {Math.Max(1, totalPages)}";
         }
+
 
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
@@ -85,19 +121,19 @@ namespace salemanagementApp.view
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            UserModel? selectedUser = dgUsers.SelectedItem as UserModel;
+            User selectedUser = dgUsers.SelectedItem as User;
             if (selectedUser == null)
             {
                 MessageBox.Show("Vui lòng chọn người dùng cần sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            EditUserPage editUserPage = new EditUserPage(selectedUser.Id);
-            this.NavigationService.Navigate(editUserPage);
+            //EditUserPage editUserPage = new EditUserPage(selectedUser.Id);
+            //this.NavigationService.Navigate(editUserPage);
         }
 
         private void btnPermission_Click(object sender, RoutedEventArgs e)
         {
-            UserModel? selectedUser = dgUsers.SelectedItem as UserModel;
+            User selectedUser = dgUsers.SelectedItem as User;
             if (selectedUser == null)
             {
                 MessageBox.Show("Vui lòng chọn người dùng cần phân quyền!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -108,7 +144,7 @@ namespace salemanagementApp.view
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            UserModel? selectedUser = dgUsers.SelectedItem as UserModel;
+            User selectedUser = dgUsers.SelectedItem as User;
             if (selectedUser == null)
             {
                 MessageBox.Show("Vui lòng chọn người dùng cần xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -119,7 +155,7 @@ namespace salemanagementApp.view
 
             if (result == MessageBoxResult.Yes)
             {
-                using (var context = new AppDbContext())
+                using (var context = new AppDbContext(new DbContextOptions<AppDbContext>()))
                 {
                     var userToDelete = context.Users.FirstOrDefault(u => u.Id == selectedUser.Id);
                     if (userToDelete != null)
@@ -135,7 +171,7 @@ namespace salemanagementApp.view
 
         private void btnSendEmail_Click(object sender, RoutedEventArgs e)
         {
-            UserModel? selectedUser = dgUsers.SelectedItem as UserModel;
+            User selectedUser = dgUsers.SelectedItem as User;
             if (selectedUser == null)
             {
                 MessageBox.Show("Vui lòng chọn người dùng cần gửi email!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -144,7 +180,12 @@ namespace salemanagementApp.view
 
             try
             {
-                string projectRoot = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.FullName;
+                string projectRoot = Directory.GetParent(AppDomain.CurrentDomain.BaseDirectory)?.Parent?.Parent?.Parent?.FullName;
+                if (projectRoot == null)
+                {
+                    throw new InvalidOperationException("Không thể xác định thư mục gốc của dự án.");
+                }
+
                 string folderPath = Path.Combine(projectRoot, "EmailTest");
 
                 if (!Directory.Exists(folderPath))
@@ -169,11 +210,6 @@ namespace salemanagementApp.view
             {
                 MessageBox.Show($"Lỗi khi lưu email: {ex.Message}", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-        public AddUserPage(List<UserModel> allUsers)
-        {
-            InitializeComponent();
-            _allUsers = allUsers;
         }
     }
 }
