@@ -1,7 +1,10 @@
-﻿namespace salemanagementApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace salemanagementApp.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         public string FullName { get; set; }
         public string Username { get; set; }

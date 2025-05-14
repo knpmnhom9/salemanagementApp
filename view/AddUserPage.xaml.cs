@@ -1,4 +1,5 @@
-﻿using salemanagementApp.Models;
+﻿using salemanagementApp.Data;
+using salemanagementApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,56 +16,65 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace salemanagementApp.view
-{
-    public partial class AddUserPage : Page
     {
-        private List<User> _allUsers;
-
-        public AddUserPage(List<User> allUsers)
+        public partial class AddUserPage : Page
         {
-            InitializeComponent();
-            _allUsers = allUsers;
-        }
+            private List<User> _allUsers;
 
-        // Sự kiện khi nhấn nút "Lưu"
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-            // Kiểm tra các trường nhập liệu
-            if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
-                string.IsNullOrWhiteSpace(txtUsername.Text) ||
-                string.IsNullOrWhiteSpace(txtEmail.Text) ||
-                string.IsNullOrWhiteSpace(txtPhone.Text) ||
-                cboRole.SelectedItem == null)
+            public AddUserPage(List<User> allUsers)
             {
-                MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                InitializeComponent();
+                _allUsers = allUsers;
             }
 
-            // Tạo đối tượng UserModel mới
-            var selectedRole = cboRole.SelectedItem as ComboBoxItem;
-            var newUser = new User
+            private void btnSave_Click(object sender, RoutedEventArgs e)
             {
-               
-                FullName = txtFullName.Text,
-                Username = txtUsername.Text,
-                Email = txtEmail.Text,
-                Phone = txtPhone.Text,
-                Role = selectedRole?.Content?.ToString() ?? string.Empty,
-                Status = "Hoạt động" // Mặc định là "Hoạt động"
-            };
+                if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
+                    string.IsNullOrWhiteSpace(txtUsername.Text) ||
+                    string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                    string.IsNullOrWhiteSpace(txtPhone.Text) ||
+                    cboRole.SelectedItem == null)
+                {
+                    MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            // Thêm người dùng vào danh sách
-            _allUsers.Add(newUser);
-            MessageBox.Show("Người dùng đã được thêm thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                var selectedRole = cboRole.SelectedItem as ComboBoxItem;
+                string role = selectedRole?.Tag?.ToString() ?? "User"; // lấy theo Tag thay vì Content
 
-            // Đóng trang hoặc quay lại trang trước
-            this.NavigationService.GoBack();
-        }
+                var newUser = new User
+                {
+                    FullName = txtFullName.Text.Trim(),
+                    Username = txtUsername.Text.Trim(),
+                    Email = txtEmail.Text.Trim(),
+                    Phone = txtPhone.Text.Trim(),
+                    Role = role,
+                    Status = "Active"
+                };
 
-        // Sự kiện khi nhấn nút "Hủy"
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
-        {
-            this.NavigationService.GoBack();
+                try
+                {
+                    using (var db = new AppDbContext())
+                    {
+                        db.Users.Add(newUser);
+                        db.SaveChanges();
+                    }
+
+                    // cập nhật danh sách hiển thị
+                    _allUsers.Add(newUser);
+
+                    MessageBox.Show("Người dùng đã được thêm thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.NavigationService.GoBack();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi lưu vào DB: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+            private void btnCancel_Click(object sender, RoutedEventArgs e)
+            {
+                this.NavigationService.GoBack();
+            }
         }
     }
-}

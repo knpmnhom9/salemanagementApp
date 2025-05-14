@@ -23,8 +23,9 @@ namespace salemanagementApp.view
         private AppDbContext GetContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=SaleManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            //optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=SaleManagementDB;Trusted_Connection=True;TrustServerCertificate=True;");
             // đổi nếu cần thiết
+            
             return new AppDbContext(optionsBuilder.Options);
         }
 
@@ -45,17 +46,7 @@ namespace salemanagementApp.view
             var pagedUsers = _allUsers
                 .Skip((_currentPage - 1) * _itemsPerPage)
                 .Take(_itemsPerPage)
-                .Select((user, index) => new
-                {
-                    STT = (_currentPage - 1) * _itemsPerPage + index + 1,
-                    user.Id,
-                    user.FullName,
-                    user.Username,
-                    user.Email,
-                    user.Phone,
-                    user.Role,
-                    user.Status
-                }).ToList();
+                .ToList();
 
             dgUsers.ItemsSource = pagedUsers;
 
@@ -121,15 +112,15 @@ namespace salemanagementApp.view
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
-            User selectedUser = dgUsers.SelectedItem as User;
-            if (selectedUser == null)
+            var selectedUser = dgUsers.SelectedItem as User;
+            if (selectedUser != null)
             {
-                MessageBox.Show("Vui lòng chọn người dùng cần sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                // Điều hướng tới EditUserPage, truyền User được chọn
+                this.NavigationService.Navigate(new EditUserPage(selectedUser));
             }
-            //EditUserPage editUserPage = new EditUserPage(selectedUser.Id);
-            //this.NavigationService.Navigate(editUserPage);
         }
+        
+
 
         private void btnPermission_Click(object sender, RoutedEventArgs e)
         {
@@ -151,23 +142,41 @@ namespace salemanagementApp.view
                 return;
             }
 
-            MessageBoxResult result = MessageBox.Show($"Bạn có chắc chắn muốn xóa người dùng {selectedUser.FullName}?", "Xác nhận xóa", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa người dùng {selectedUser.FullName}?",
+                "Xác nhận xóa",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
 
             if (result == MessageBoxResult.Yes)
             {
-                using (var context = new AppDbContext(new DbContextOptions<AppDbContext>()))
+                try
                 {
-                    var userToDelete = context.Users.FirstOrDefault(u => u.Id == selectedUser.Id);
-                    if (userToDelete != null)
+                    using (var context = new AppDbContext())
                     {
-                        context.Users.Remove(userToDelete);
-                        context.SaveChanges();
+                        var userToDelete = context.Users.FirstOrDefault(u => u.Id == selectedUser.Id);
+                        if (userToDelete != null)
+                        {
+                            context.Users.Remove(userToDelete);
+                            context.SaveChanges();
+                            MessageBox.Show("Xóa người dùng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy người dùng trong cơ sở dữ liệu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
+
+                    LoadDataFromDatabase(); // gọi lại hàm load dữ liệu
                 }
-                LoadDataFromDatabase();
-                MessageBox.Show("Xóa người dùng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi xóa người dùng: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
+
 
         private void btnSendEmail_Click(object sender, RoutedEventArgs e)
         {

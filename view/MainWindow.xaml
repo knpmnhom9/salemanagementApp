@@ -3,38 +3,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Main Window" WindowStartupLocation="CenterScreen"
         WindowState="Maximized" Background="#ECF0F1">
-
     <Window.Resources>
-        <!-- Màu mặc định và màu khi được chọn -->
-        <SolidColorBrush x:Key="MenuDefaultBackground" Color="#34495E"/>
-        <SolidColorBrush x:Key="MenuSelectedBackground" Color="#1ABC9C"/>
+            <!-- Màu mặc định và màu khi được chọn -->
+            <SolidColorBrush x:Key="MenuDefaultBackground" Color="#34495E"/>
+            <SolidColorBrush x:Key="MenuSelectedBackground" Color="#1ABC9C"/>
 
-        <Style x:Key="SidebarButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource MenuDefaultBackground}" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="12" />
-            <Setter Property="Margin" Value="5" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Style x:Key="SidebarButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource MenuDefaultBackground}" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Padding" Value="12" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Cursor" Value="Hand" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="8">
+                                <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#1ABC9C"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+        <!-- Style ẩn mũi tên của Expander -->
+        <Style TargetType="Expander">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="8">
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        </Border>
+                    <ControlTemplate TargetType="Expander">
+                        <StackPanel>
+                            <Border Background="{TemplateBinding Background}" Margin="5" Padding="8" CornerRadius="8">
+                                <ContentPresenter Content="{TemplateBinding Header}" />
+                            </Border>
+                            <ContentPresenter Name="ExpandSite" Visibility="Collapsed" />
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#2980B9"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
+
     </Window.Resources>
 
-    <Grid>
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
@@ -53,20 +74,31 @@
             </Grid.ColumnDefinitions>
 
             <!-- Sidebar -->
-            <Border Background="#2C3E50" CornerRadius="10" Margin="10" Padding="10" Grid.Column="0">  
-               <StackPanel x:Name="SidebarMenu" Visibility="Visible">  
-                   <TextBlock Text="📌 Menu chính" Foreground="White" FontSize="18" FontWeight="Bold" Margin="10" HorizontalAlignment="Left"/>  
+            <Border Background="#2C3E50" CornerRadius="10" Margin="10" Padding="10" Grid.Column="0">
+                <StackPanel x:Name="SidebarMenu" Visibility="Visible">
+                    <TextBlock Text="📌 Menu chính" Foreground="White" FontSize="18" FontWeight="Bold" Margin="10" HorizontalAlignment="Left"/>
 
-                   <Button Content="👤 Quản lý người dùng" Tag="UserManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="📦 Quản lý sản phẩm" Tag="ProductManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="📥 Giỏ hàng &amp; Thanh toán" Tag="CartAndCheckoutPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="🛒 Quản lý đơn hàng" Tag="OrderManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="🏬 Quản lý kho hàng" Tag="WarehouseManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="📈 Báo cáo &amp; Thống kê" Tag="ReportPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="💬 Đánh giá &amp; Hỗ trợ khách hàng" Tag="CustomerSupportPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="🎯 Khuyến mãi &amp; Marketing" Tag="PromotionAndMarketingPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-                   <Button Content="⚙️ Hệ thống &amp; Cấu hình" Tag="SettingsPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>  
-               </StackPanel>  
+                    <Button Content="👤 Quản lý người dùng" Tag="UserManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+
+                    <Expander Header="📦 Quản lý sản phẩm &amp; danh mục" Foreground="White" Background="{StaticResource MenuDefaultBackground}" Margin="5" Padding="8" FontSize="16">
+                        <StackPanel>
+                            <Button Content="📝 Tạo/Sửa/Xoá sản phẩm" Tag="ProductCreateEditDelete" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                            <Button Content="📂 Quản lý danh mục sản phẩm" Tag="CategoryManagement" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                            <Button Content="🔍 Tìm kiếm &amp; lọc sản phẩm" Tag="ProductSearchFilter" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                            <Button Content="🖼️ Thêm hình ảnh sản phẩm" Tag="ProductAddImage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                            <Button Content="📝 Quản lý mô tả sản phẩm" Tag="ProductDescription" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                            <Button Content="❤️ Thêm vào danh sách yêu thích" Tag="ProductFavorites" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToSubModule"/>
+                        </StackPanel>
+                    </Expander>
+
+                    <Button Content="📥 Giỏ hàng &amp; Thanh toán" Tag="CartAndCheckoutPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="🛒 Quản lý đơn hàng" Tag="OrderManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="🏬 Quản lý kho hàng" Tag="WarehouseManagementPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="📈 Báo cáo &amp; Thống kê" Tag="ReportPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="💬 Đánh giá &amp; Hỗ trợ khách hàng" Tag="CustomerSupportPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="🎯 Khuyến mãi &amp; Marketing" Tag="PromotionAndMarketingPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                    <Button Content="⚙️ Hệ thống &amp; Cấu hình" Tag="SettingsPage" Style="{StaticResource SidebarButtonStyle}" Click="NavigateToModule"/>
+                </StackPanel>
             </Border>
 
             <!-- Main Content Area -->
